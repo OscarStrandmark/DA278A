@@ -1,0 +1,4 @@
+
+Skriv dubbelt länkad lista
+Noder innehåller endast pekare på prev & next
+Endast forward iterator
