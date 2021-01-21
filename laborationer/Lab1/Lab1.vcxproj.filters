@@ -20,12 +20,21 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LList.h">
+    <ClInclude Include="TestLevel.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="List.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LList.cpp">
+    <ClCompile Include="ListTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListIterTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
