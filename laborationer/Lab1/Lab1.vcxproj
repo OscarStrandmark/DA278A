@@ -139,13 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="notes.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="List.hpp" />
     <ClInclude Include="TestLevel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ListBasicTest.cpp" />
     <ClCompile Include="ListIterTest.cpp" />
     <ClCompile Include="ListTest.cpp" />
     <ClCompile Include="Main.cpp" />

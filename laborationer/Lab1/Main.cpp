@@ -18,6 +18,7 @@ using std::cout;
 //template class List<int>;
 
 
+void TestBasic();
 void TestList();
 void TestListIter();
 
@@ -25,16 +26,13 @@ int main() {
 #ifdef DBG_NEW
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-    List<int> l;
-    l.begin();
-    const List<int> cl;
-    cl.end();
 
-    
+    TestBasic();
     TestList();
     TestListIter();
     std::cout << "There should be one memory leak!";
     std::cin.get();
+
 }
 
 //template class List<int>;

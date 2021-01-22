@@ -6,6 +6,9 @@
 #endif  // _DEBUG
 #include <crtdbg.h>
 
+#include "TestLevel.h"
+
+#if (defined(LEVEL)  && (LEVEL>20) ||  !defined(LEVEL))   && (defined(VG) || defined(G))
 
 #include "List.hpp"
 
@@ -30,31 +33,6 @@ bool IsConstOrConstRefFun(T& x) {
 
 
 
-//void AssertStrEqual(List<char>& lhs, const char* rhs) {
-//    auto lIt = lhs.begin(); auto rIt = rhs;
-//    for (; lIt != lhs.end() && *rIt; ++lIt, ++rIt) {
-//        assert(*rIt == *rIt);
-//        assert(*rhs != 0);
-//    }
-//    assert(lIt == lhs.end() && *rIt == '\0');
-//}
-
-
-//struct C {
-//    static std::string usedConstr;
-//
-//    C() {
-//        usedConstr += "DC";
-//    }
-//    C(const C& c) {
-//        usedConstr += "CC";
-//    }
-//    C(C&& c) {
-//        usedConstr += "MC";
-//    }
-//};
-//
-//std::string C::usedConstr{};
 
 void TestIterRel(); //Längst ner
 
@@ -80,9 +58,6 @@ void TestList() {
         Cont b{ a };
         Cont c{ "hej" };
         Cont d{ std::move(c) };
-        a = b;
-        c = "hej";
-        b = std::move(c);
         assert(c.Invariant());
         assert(d.Invariant());
         assert(a.Invariant());
@@ -95,21 +70,14 @@ void TestList() {
         delete x;
     }
 
-    //-	copy constructor  , move
+    //-	copy constructor
     {
-        Cont a("Hej"), c("Foo");
-        c = a;
+        Cont a("Hej"), c(a);
         assert(c == "Hej" && a == c);
         a.front() = 'a';
         assert(a == "aej" && c == "Hej");
-
-        Cont m(std::move(a));
-        assert(m.Invariant()); assert(a.Invariant());
-        assert(m == "aej" && a == "");
-        //Move empty!
-        Cont mm(std::move(a));
-        assert(mm.Invariant()); assert(a.Invariant());
-        assert(mm == "" && a == "");
+        Cont x, y(x);
+        assert(x.Invariant() && y.Invariant());
     }
 
     //-	List<char>(char *)
@@ -118,48 +86,48 @@ void TestList() {
         List<char> vec(v1); assert(vec == "foo");
         List<char> v3("bar");  assert(v3 == "bar");
     }
-    //	-	operator =(Sträng sträng)
-    {
-        List<char> Foo("Foo");
-        const List<char> FooC("Foo");
-        List<char> Bar("Bar");
-        const List<char> BarC("Bar");
-        Cont a("hej");
-        Bar = a;
-        assert(Bar.Invariant());
-        assert(Bar == "hej");
-        assert((Bar = a) == a);
-        assert((Bar = Bar) == a);	//self assignment
-    }
+    ////	-	operator =(Sträng sträng)
+    //{
+    //    List<char> Foo("Foo");
+    //    const List<char> FooC("Foo");
+    //    List<char> Bar("Bar");
+    //    const List<char> BarC("Bar");
+    //    Cont a("hej");
+    //    Bar = a;
+    //    assert(Bar.Invariant());
+    //    assert(Bar == "hej");
+    //    assert((Bar = a) == a);
+    //    assert((Bar = Bar) == a);	//self assignment
+    //}
 
-    //move!
-    {
-        List<char> Foo("Foo");
-        List<char> Bar("Bar");
+    ////move!
+    //{
+    //    List<char> Foo("Foo");
+    //    List<char> Bar("Bar");
 
-        Bar = std::move(Foo);
-        assert(Bar.Invariant()); assert(Foo.Invariant());
-        assert(Bar == "Foo" && Foo == "");
+    //    Bar = std::move(Foo);
+    //    assert(Bar.Invariant()); assert(Foo.Invariant());
+    //    assert(Bar == "Foo" && Foo == "");
 
 
-        //move empty
-        Bar = std::move(Foo);
-        assert(Bar.Invariant()); assert(Foo.Invariant());
-        assert(Bar == "" && Foo == "");
+    //    //move empty
+    //    Bar = std::move(Foo);
+    //    assert(Bar.Invariant()); assert(Foo.Invariant());
+    //    assert(Bar == "" && Foo == "");
 
-    }
+    //}
 
-    //move const
-    {
-        List<char> Foo("Foo");
-        const List<char> FooC("Foo");
-        List<char> Bar("Bar");
-        const List<char> BarC("Bar");
-        Bar = BarC;
-        Bar = std::move(FooC);
-        assert(Bar.Invariant()); assert(FooC.Invariant());
-        assert(Bar == "Foo" && FooC == "Foo");
-    }
+    ////move const
+    //{
+    //    List<char> Foo("Foo");
+    //    const List<char> FooC("Foo");
+    //    List<char> Bar("Bar");
+    //    const List<char> BarC("Bar");
+    //    Bar = BarC;
+    //    Bar = std::move(FooC);
+    //    assert(Bar.Invariant()); assert(FooC.Invariant());
+    //    assert(Bar == "Foo" && FooC == "Foo");
+    //}
 
     // front, back;
     {
@@ -179,7 +147,7 @@ void TestList() {
         it = ----a.end(); //d
         it = a.erase(it);
         assert(a.Invariant());
-        assert(*it == 'e'&& a == "abXce");
+        assert(*it == 'e' && a == "abXce");
 
     }
     //-	push och pop
@@ -292,10 +260,10 @@ void TestIterRel() {
     { bool f = RelTest(vecAbcdef, vecAbcdefg, != , == ); assert(f); }
     { bool f = RelTest(vecAbcdefg, vecAbcdef, != , == ); assert(f); }
 
+    { bool f = RelTest(vecAbcdef, vecAbcdef, == , < ); assert(f); }
     bool f1 = vecAbcdeF < vecBbcdef;
     bool f2 = vecAbcdef < vecAbcdeF;
     bool f3 = vecAbcdef < vecAbcdef;
-    { bool f = RelTest(vecAbcdef, vecAbcdef, == , < ); assert(f); }
     { bool f = RelTest(vecAbcdef, vecAbcdeF, > , < ); assert(f); }
     { bool f = RelTest(vecAbcdef, vecBbcdef, <, >); assert(f); }
     { bool f = RelTest(vecAbcdef, vecAbcdefg, <, >); assert(f); }
@@ -321,3 +289,7 @@ void XXX() {
     List<char>::const_iterator ccc = c.cbegin();
     for (auto it = c.begin(); it != c.end(); ++it) {}
 }
+
+#else
+void TestList() {}
+#endif

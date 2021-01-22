@@ -8,6 +8,8 @@
 
 #include "TestLevel.h"
 
+#if (defined(LEVEL)  && (LEVEL>20) ||  !defined(LEVEL))   && (defined(VG) || defined(G))
+
 #include "List.hpp"
 //#include "ListIter.hpp"
 
@@ -126,3 +128,7 @@ void TestListIter() {
     }
 
 }
+
+#else
+void TestListIter() {}
+#endif

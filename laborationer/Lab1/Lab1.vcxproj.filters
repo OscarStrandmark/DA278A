@@ -15,26 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="notes.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="TestLevel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="List.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="TestLevel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ListBasicTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListIterTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ListTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ListIterTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
