@@ -6,6 +6,15 @@
 //Man behöver kunna se att listan har rätt innehåll
 //Därför så har vi två testfunktioner
 
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#include <stdlib.h>
+#include <crtdbg.h>
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
+
 #include <cassert>
 #include <iostream>
 using std::cout;

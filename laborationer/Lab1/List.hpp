@@ -48,7 +48,7 @@ class List
 		Link* _ptr;
 	public:
 
-		using iterator_category = std::forward_iterator_tag;
+		using iterator_category = std::bidirectional_iterator_tag;
 		using value_type = T;
 		using difference_type = std::ptrdiff_t;
 		using reference = X&;
@@ -67,12 +67,6 @@ class List
 		}
 
 		ListIter(Link* ptr) : _ptr(static_cast<Node*>(ptr)) {}
-
-		ListIter& operator=(const ListIter& other) 
-		{
-			_ptr = other._ptr;
-			return *this;
-		}
 
 		T& operator*() 
 		{ 
@@ -144,6 +138,7 @@ public:
 
 	List() = default;
 
+	//Vänsterlänkar vid skapande, höger sist
 
 	List(const List& other)
 	{
@@ -321,6 +316,8 @@ public:
 		int forwardCount = 0;
 		int backwardsCount = 0;
 		Link* tmp;
+
+		//Bättre att ramla igenom en gång och kolla att tmp->next->prev
 
 		tmp = _head._next;
 		while (tmp != &_head)

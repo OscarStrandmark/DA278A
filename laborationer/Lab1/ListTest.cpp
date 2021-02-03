@@ -37,13 +37,14 @@ bool IsConstOrConstRefFun(T& x) {
 void TestIterRel(); //Längst ner
 
 void TestList() {
+    
     {
         List<char> Foo("Foo");
         const List<char> FooC("Foo");
         List<char> Bar("Bar");
         const List<char> BarC("Bar");
     }
-
+    
     //Typedef, måste fungera för att testprogrammet ska fungera!
     {
         std::string strHej("hej");
@@ -52,6 +53,7 @@ void TestList() {
         i = a.begin();
         assert(*i == strHej);
     }
+    
     //Tom testning av att alla constructorer och tilldelningsoperaoterer finns!
     {
         Cont a{};
@@ -79,13 +81,14 @@ void TestList() {
         Cont x, y(x);
         assert(x.Invariant() && y.Invariant());
     }
-
+    
     //-	List<char>(char *)
     {
         List<char> v1("foo"); assert(v1 == "foo");
         List<char> vec(v1); assert(vec == "foo");
         List<char> v3("bar");  assert(v3 == "bar");
     }
+    
     ////	-	operator =(Sträng sträng)
     //{
     //    List<char> Foo("Foo");
@@ -137,6 +140,7 @@ void TestList() {
     }
 
     // insert erase
+    
     {
         Cont a("abcde");
         auto it = ++++a.begin(); //c
@@ -150,7 +154,9 @@ void TestList() {
         assert(*it == 'e' && a == "abXce");
 
     }
+    
     //-	push och pop
+    
     {
         Cont a{};
         char c = 'b';
@@ -209,7 +215,7 @@ void TestList() {
         assert(!IsConstOrConstRefFun(Bar.back()));
         assert(IsConstOrConstRefFun(BarC.back()));
     }
-
+    
 #ifdef VG
     {
         List<char> Foo("Foo");
