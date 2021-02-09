@@ -24,6 +24,9 @@
     <ClInclude Include="Vector.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="TestLevel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VectorTest.cpp">

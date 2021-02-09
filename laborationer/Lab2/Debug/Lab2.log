@@ -1,8 +1,4 @@
-﻿  Main.cpp
-W:\git\DA278A\laborationer\Lab2\Vector.hpp(50,1): error C2061: syntax error: identifier 'VectorItt'
-W:\git\DA278A\laborationer\Lab2\Vector.hpp(69): message : see reference to class template instantiation 'Vector<T>' being compiled
-  VectIterTest.cpp
-W:\git\DA278A\laborationer\Lab2\VectIterTest.cpp(1,10): fatal error C1083: Cannot open include file: 'TestLevel.h': No such file or directory
+﻿  VectIterTest.cpp
   VectorTest.cpp
-W:\git\DA278A\laborationer\Lab2\VectorTest.cpp(8,10): fatal error C1083: Cannot open include file: 'TestLevel.h': No such file or directory
   Generating Code...
+  Lab2.vcxproj -> W:\git\DA278A\laborationer\Lab2\Debug\Lab2.exe
