@@ -180,6 +180,7 @@ void TestIterPart1() {
 
 }
 
+/*
 #pragma region Test Iterator in Algorithm
 namespace std {
     template <class IT>
@@ -187,6 +188,8 @@ namespace std {
         shuffle(begin, end, std::default_random_engine());
     }
 }
+*/
+
 
 void TestIterInAlg() {
     static const int N = 26;

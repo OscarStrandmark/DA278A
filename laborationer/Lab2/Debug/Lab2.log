@@ -1,4 +1,5 @@
-﻿  VectIterTest.cpp
+﻿  Main.cpp
+  VectIterTest.cpp
   VectorTest.cpp
   Generating Code...
   Lab2.vcxproj -> W:\git\DA278A\laborationer\Lab2\Debug\Lab2.exe

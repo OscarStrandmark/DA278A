@@ -1,6 +1,6 @@
 #pragma once
 
-#define LEVEL 10
+#define LEVEL 99
 #define G
 #define VG
 

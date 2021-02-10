@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <iostream>
+#include <stdexcept>
 
 template<class T>
 class Vector
@@ -47,12 +48,12 @@ private:
 			return *this;
 		}
 		
-		X& operator* ()
+		X& operator* () const
 		{
 			return *_ptr;
 		}
 		
-		X* operator->()
+		X* operator->() const
 		{
 			return _ptr;
 		}
@@ -61,7 +62,7 @@ private:
 		{
 			return _ptr[i];
 		}
-		
+
 		VectorItt& operator++()
 		{
 			++_ptr;
@@ -74,26 +75,36 @@ private:
 			return *this;
 		}
 		
-		VectorItt& operator++(int)
+		VectorItt operator++(int)
 		{
 			auto iter = *this;
 			operator++();
 			return iter;
 		}
 		
-		VectorItt& operator--(int)
+		VectorItt operator--(int)
 		{
 			auto iter = *this;
 			operator--();
 			return iter;
 		}
+
+		VectorItt operator+=(difference_type i) const
+		{
+			return _ptr + i;
+		}
+
+		VectorItt operator-=(difference_type i) const
+		{
+			return _ptr - i;
+		}
 		
-		VectorItt& operator+(difference_type i) const
+		VectorItt operator+(difference_type i) const
 		{
 			return _ptr + i;
 		}
 		
-		VectorItt& operator-(difference_type i) const
+		VectorItt operator-(difference_type i) const
 		{
 			return _ptr - i;
 		}
@@ -128,7 +139,7 @@ public:
 	{
 		_siz = 0;
 		_cap = 8;
-		_ptr = new T[_cap];
+		_ptr = new T[_cap]; //Kan ge exception, vid minnet fullt
 	}
 
 	Vector (const Vector& other)
@@ -183,7 +194,7 @@ public:
 		return *this;
 	}
 
-	Vector& operator= (Vector&& other) noexcept
+	Vector& operator= (Vector&& other) noexcept //Inte helt ok vid rhs är själv
 	{
 		delete[] _ptr;
 		
@@ -210,14 +221,22 @@ public:
 
 	T& at (size_t i)
 	{
-		if (i >= _siz) throw std::out_of_range;
+		if (i >= _siz)
+		{
+			throw std::out_of_range("index out of range");
+		}
+
 		return _ptr[i];
 
 	}
 
 	const T& at (size_t i) const
 	{
-		if (i >= _siz) throw std::out_of_range;
+		if (i >= _siz)
+		{
+			throw std::out_of_range("index out of range");
+		}
+
 		return _ptr[i];
 	}
 
@@ -231,19 +250,18 @@ public:
 		return _ptr;
 	}
 
-	//LVL 10
 	iterator begin() noexcept { return iterator(_ptr); }
 	iterator end () noexcept { return iterator(_ptr + _siz); }
 	const_iterator begin () const noexcept { return const_iterator(_ptr); }
 	const_iterator end () const noexcept { return const_iterator(_ptr + _siz); }
 	const_iterator cbegin () const noexcept { return const_iterator(_ptr); }
 	const_iterator cend () const noexcept { return const_iterator(_ptr + _siz); }
-	reverse_iterator begin () noexcept { return reverse_iterator(_ptr); }
-	reverse_iterator end () noexcept { return reverse_iterator(_ptr + _siz); }
-	const_reverse_iterator begin () const noexcept { return const_reverse_iterator(_ptr); }
-	const_reverse_iterator end () const noexcept { return const_reverse_iterator(_ptr + _siz); }
-	const_reverse_iterator cbegin () const noexcept { return const_reverse_iterator(_ptr); }
-	const_reverse_iterator cend () const noexcept { return const_reverse_iterator(_ptr + _siz); }
+	reverse_iterator rbegin () noexcept { return reverse_iterator(_ptr); }
+	reverse_iterator rend () noexcept { return reverse_iterator(_ptr + _siz); }
+	const_reverse_iterator rbegin () const noexcept { return const_reverse_iterator(_ptr); }
+	const_reverse_iterator rend () const noexcept { return const_reverse_iterator(_ptr + _siz); }
+	const_reverse_iterator rcbegin () const noexcept { return const_reverse_iterator(_ptr); }
+	const_reverse_iterator rcend () const noexcept { return const_reverse_iterator(_ptr + _siz); }
 
 	size_t size () const noexcept
 	{
@@ -289,6 +307,7 @@ public:
 
 	void push_back (T c)
 	{
+		//Kontrollera att _cap != 0
 		if (_siz == _cap) reserve(_cap * 2);
 		_ptr[_siz++] = c;
 	}
@@ -355,10 +374,16 @@ public:
 		return cout;
 	}
 
-	template<class T>
-	void swap(Vector<T>& lhs, Vector<T>& rhs)
+	friend void swap(Vector<T>& lhs, Vector<T>& rhs)
 	{
 		lhs.swap(rhs);
+	}
+
+	void swap(Vector& other)
+	{
+		std::swap(_ptr, other._ptr);
+		std::swap(_siz, other._siz);
+		std::swap(_cap, other._cap);
 	}
 
 #define CHECK assert(Invariant());
