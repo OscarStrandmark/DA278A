@@ -1,5 +1,6 @@
 #include <cassert>
-#define LEVEL 2
+#include <vector>
+#define LEVEL 7
 #define VG false
 
 #if LEVEL>=1
@@ -81,6 +82,8 @@ void TestSum() {
 
 #if LEVEL>=7
 #include "SFINAE.hpp"
+#include <string>
+using std::string;
 void TestSFINAE() {
     int i(3);
     assert(NoThrowCopyConstructible(i));
@@ -90,8 +93,6 @@ void TestSFINAE() {
 #endif
 
 
-#include <string>
-using std::string;
 
 int main() {
 #if LEVEL>=1

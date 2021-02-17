@@ -1,3 +1,5 @@
+#pragma once
+
 template<int X, int Y>
 struct Add
 {

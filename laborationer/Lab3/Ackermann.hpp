@@ -1,3 +1,5 @@
+#pragma once
+
 template<int m, int n>
 struct Ackermann
 {
