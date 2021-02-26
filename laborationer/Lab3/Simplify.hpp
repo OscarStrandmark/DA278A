@@ -33,24 +33,6 @@ struct SimplifyType<const T>
 };
 
 template<class T>
-struct SimplifyType<const T*>
-{
-	using type = const T;
-};
-
-template<class T>
-struct SimplifyType<const T&>
-{
-	using type = const T;
-};
-
-template<class T>
-struct SimplifyType<const T[]>
-{
-	using type = const T;
-};
-
-template<class T>
 using SimplifyType_t = typename SimplifyType<T>::type;
 
 //BaseType
@@ -84,24 +66,6 @@ struct BaseType<T[]>
 
 template<class T>
 struct BaseType<const T>
-{
-	using type = typename BaseType_t<T>;
-};
-
-template<class T>
-struct BaseType<const T*>
-{
-	using type = typename BaseType_t<T>;
-};
-
-template<class T>
-struct BaseType<const T&>
-{
-	using type = typename BaseType_t<T>;
-};
-
-template<class T>
-struct BaseType<const T[]>
 {
 	using type = typename BaseType_t<T>;
 };

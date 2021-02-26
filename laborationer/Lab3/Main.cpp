@@ -110,7 +110,7 @@ int main() {
 #if LEVEL>5 && VG
     TestRemoveAllConst();
 #endif
-#if LEVEL>5 && VG
+#if LEVEL>5
     TestSum();
 #endif
 #if LEVEL>6
