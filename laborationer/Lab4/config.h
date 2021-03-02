@@ -12,7 +12,7 @@
  Source and destination PNG paths
  */
 #define SRCFILE ("tronlegacy.png")
-#define DESTFILE ("tronSOBEL.png")
+#define DESTFILE ("tronGRAY.png")
 
 /*
  Threading strategy
