@@ -155,6 +155,9 @@
   <ItemGroup>
     <None Include="DA278A_L4_ThreadPool_2021.pdf" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Frågor.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
