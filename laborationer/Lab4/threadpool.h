@@ -32,9 +32,10 @@ private:
             while (_pool->_running)
             {
                 std::unique_lock<std::mutex> lock(_pool->_mutex);
-                if (_pool->_queue.empty())
+                while (_pool->_queue.empty())
                 {
-                    _pool->_cvar.wait(lock);
+                    _pool->_cvar.wait(lock); //Kan lossna, race condition på loopen. 
+                    //Finns version med lambda som parameter
                 }
                 execFunc = _pool->_queue.dequeue();
                 if (execFunc != NULL)

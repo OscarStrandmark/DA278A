@@ -126,7 +126,7 @@ public:
 	{
 		if (size() != 0)
 		{
-			Link* tmp = _head._next;
+			Link* tmp = static_cast<Node*>(_head._next);
 
 			while (tmp != &_head)
 			{
