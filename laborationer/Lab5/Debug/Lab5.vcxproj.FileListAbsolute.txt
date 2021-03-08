@@ -1,0 +1,2 @@
+W:\git\DA278A\laborationer\Lab5\Debug\Lab5.exe
+W:\git\DA278A\laborationer\Lab5\Debug\Lab5.pdb

@@ -2,7 +2,7 @@
 //Använd denna som allocator
 #include "Dalloc.hpp"
 
-#define LEVEL 1
+#define LEVEL 2
 #define G_BETYG
 //#define VG_BETYG
 
