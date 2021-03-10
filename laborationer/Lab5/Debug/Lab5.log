@@ -1,8 +1,1 @@
-﻿  Main.cpp
-  VectBasicTest.cpp
-W:\git\DA278A\laborationer\Lab5\Vector.hpp(144,2): warning C4018: '<': signed/unsigned mismatch
-W:\git\DA278A\laborationer\Lab5\Vector.hpp(143): message : while compiling class template member function 'Vector<char>::~Vector(void) noexcept'
-W:\git\DA278A\laborationer\Lab5\VectBasicTest.cpp(31): message : see reference to function template instantiation 'Vector<char>::~Vector(void) noexcept' being compiled
-W:\git\DA278A\laborationer\Lab5\VectBasicTest.cpp(31): message : see reference to class template instantiation 'Vector<char>' being compiled
-  Generating Code...
-  Lab5.vcxproj -> W:\git\DA278A\laborationer\Lab5\Debug\Lab5.exe
+﻿

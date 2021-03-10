@@ -17,7 +17,7 @@ private:
 	template<class X>
 	class VectorItt
 	{
-		T* _ptr;
+		X* _ptr;
 
 	public:
 
@@ -29,17 +29,17 @@ private:
 
 		~VectorItt () = default;
 
-		VectorItt () 
+		VectorItt () noexcept
 		{
 			_ptr = nullptr;
 		}
 
-		VectorItt (T* p)
+		VectorItt (X* p) noexcept
 		{
 			_ptr = p; //Static cast?
 		}
 
-		VectorItt(const VectorItt& other)
+		VectorItt(const VectorItt& other) noexcept
 		{
 			_ptr = other._ptr; 
 		}
@@ -60,68 +60,64 @@ private:
 			return _ptr;
 		}
 		
-		X& operator[](size_t i)
+		X& operator[](size_t i) const noexcept
 		{
 			return _ptr[i];
 		}
 
-		VectorItt& operator++()
+		VectorItt& operator++() noexcept
 		{
 			++_ptr;
 			return *this;
 		}
 		
-		VectorItt& operator--()
+		VectorItt& operator--() noexcept
 		{
 			--_ptr;
 			return *this;
 		}
 		
-		VectorItt operator++(int)
+		VectorItt operator++(int) noexcept
 		{
 			auto iter = *this;
 			operator++();
 			return iter;
 		}
 		
-		VectorItt operator--(int)
+		VectorItt operator--(int) noexcept
 		{
 			auto iter = *this;
 			operator--();
 			return iter;
 		}
 
-		VectorItt operator+=(difference_type i) const
+		VectorItt operator+=(difference_type i)  noexcept
 		{
-			return _ptr + i;
-		}
-
-		VectorItt operator-=(difference_type i) const
-		{
-			return _ptr - i;
+			_ptr = _ptr + i;
+			return *this;
 		}
 		
-		VectorItt operator+(difference_type i) const
+		VectorItt operator+(difference_type i) const noexcept
 		{
-			return _ptr + i;
+			return (_ptr + i);
 		}
 		
-		VectorItt operator-(difference_type i) const
+		VectorItt operator-(difference_type i) const noexcept
 		{
-			return _ptr - i;
+			return (_ptr - i);
 		}
 		
-		difference_type operator-(const VectorItt& other) const
+		difference_type operator-(const VectorItt& other) const noexcept
 		{
 			return _ptr - other._ptr;
 		}
 		
-		friend bool operator==(const VectorItt& lhs, const VectorItt rhs) { return lhs._ptr == rhs._ptr; }
-		friend bool operator!=(const VectorItt& lhs, const VectorItt rhs) { return lhs._ptr != rhs._ptr; }
-		friend bool operator<(const VectorItt& lhs, const VectorItt rhs) { return lhs._ptr < rhs._ptr; }
-		friend bool operator>(const VectorItt& lhs, const VectorItt rhs) { return lhs._ptr > rhs._ptr; }
-		friend bool operator<=(const VectorItt& lhs, const VectorItt rhs) { return !(lhs._ptr > rhs._ptr); }
-		friend bool operator>=(const VectorItt& lhs, const VectorItt rhs) { return !(lhs._ptr < rhs._ptr); }
+		friend bool operator==(const VectorItt& lhs, const VectorItt rhs) noexcept { return lhs._ptr == rhs._ptr; }
+		friend bool operator!=(const VectorItt& lhs, const VectorItt rhs) noexcept { return lhs._ptr != rhs._ptr; }
+		friend bool operator<(const VectorItt& lhs, const VectorItt rhs) noexcept { return lhs._ptr < rhs._ptr; }
+		friend bool operator>(const VectorItt& lhs, const VectorItt rhs) noexcept { return lhs._ptr > rhs._ptr; }
+		friend bool operator<=(const VectorItt& lhs, const VectorItt rhs) noexcept { return !(lhs._ptr > rhs._ptr); }
+		friend bool operator>=(const VectorItt& lhs, const VectorItt rhs) noexcept { return !(lhs._ptr < rhs._ptr); }
 	};
 
 public:
@@ -151,8 +147,8 @@ public:
 	Vector () noexcept //O(1)
 	{
 		_siz = 0;
-		_cap = 8;
-		_ptr = _dAlloc.allocate(_cap);
+		_cap = 0;
+		_ptr = nullptr; //Göra inits via kolon
 	}
 
 	Vector (const Vector& other) //O(N)
@@ -164,7 +160,7 @@ public:
 		int offset = 0;
 		try
 		{
-			while (offset <= _siz)
+			while (offset < _siz)
 			{
 				new(_ptr + offset) T(other._ptr[offset]);
 				offset++;
@@ -178,6 +174,7 @@ public:
 				offset--;
 			}
 			_dAlloc.deallocate(_ptr, _cap);
+			throw;
 		}
 	}
 
@@ -192,11 +189,11 @@ public:
 		other._ptr = nullptr;
 	}
 
-	Vector (const char* other) //O(N), Strong exception safety. Rollback if exception
+	Vector (const char* other) //O(N)
 	{
 
-		_siz = 0; //Set to 0 here, gets incremented in push_back()
-		_cap = strlen(other) * 2;
+		_siz = strlen(other);
+		_cap =  _siz * 2;
 		_ptr = _dAlloc.allocate(_cap);
 
 		int index = 0;
@@ -204,42 +201,36 @@ public:
 		{
 			while (other[index] != '\0')
 			{
-				push_back(other[index]);
+				new(_ptr + index) T(other[index]);
 				index++;
 			}
 		}
 		catch (const std::exception&)
 		{
-			while (index >= 0)
+			while (index != 0)
 			{
 				_ptr[index].~T();
 				index--;
 			}
+			throw;
 		}
+
+
 	}
 
 	Vector& operator= (const Vector& other) //O(N)
 	{
-		
-		if (*this == other) return *this;
-
-		reserve(other._siz);
-		_siz = other._siz;
-
-		for (size_t i = 0; i < _siz; i++)
-		{
-			_ptr[i] = other._ptr[i];
-		}
-
+		Vector temp(other);
+		swap(temp);
 		return *this;
 	}
 
-	Vector& operator= (Vector&& other) noexcept //O(1), kommer bli O(N)(?)
+	Vector& operator= (Vector&& other) noexcept //O(1)
 	{
 
-		if (*this == other) return *this;
+		if (this == &other) return *this;
 
-		_dAlloc.deallocate(_ptr, _cap);
+		this->~Vector();
 		
 		_siz = other._siz;
 		_cap = other._cap;
@@ -252,19 +243,19 @@ public:
 		return *this;
 	}
 
-	T& operator[] (size_t i) //O(1)
+	T& operator[] (size_t i) noexcept //O(1)
 	{
 		return _ptr[i];
 	}
 
-	const T& operator[] (size_t i) const //O(1)
+	const T& operator[] (size_t i) const noexcept //O(1)
 	{
 		return _ptr[i];
 	}
 
 	T& at (size_t i) //O(1)
 	{
-		if (i >= _siz)
+		if (!(i < _siz))
 		{
 			throw std::out_of_range("index out of range");
 		}
@@ -275,7 +266,7 @@ public:
 
 	const T& at (size_t i) const //O(1)
 	{
-		if (i >= _siz)
+		if (!(i < _siz))
 		{
 			throw std::out_of_range("index out of range");
 		}
@@ -299,12 +290,12 @@ public:
 	const_iterator end () const noexcept { return const_iterator(_ptr + _siz); } //O(1)
 	const_iterator cbegin () const noexcept { return const_iterator(_ptr); } //O(1)
 	const_iterator cend () const noexcept { return const_iterator(_ptr + _siz); } //O(1)
-	reverse_iterator rbegin () noexcept { return reverse_iterator(_ptr); } //O(1)
-	reverse_iterator rend () noexcept { return reverse_iterator(_ptr + _siz); } //O(1)
-	const_reverse_iterator rbegin () const noexcept { return const_reverse_iterator(_ptr); } //O(1)
-	const_reverse_iterator rend () const noexcept { return const_reverse_iterator(_ptr + _siz); } //O(1)
-	const_reverse_iterator rcbegin () const noexcept { return const_reverse_iterator(_ptr); } //O(1)
-	const_reverse_iterator rcend () const noexcept { return const_reverse_iterator(_ptr + _siz); } //O(1)
+	reverse_iterator rbegin () noexcept { return reverse_iterator(_ptr + _siz); } //O(1)
+	reverse_iterator rend () noexcept { return reverse_iterator(_ptr); } //O(1)
+	const_reverse_iterator rbegin () const noexcept { return const_reverse_iterator(_ptr + _siz); } //O(1)
+	const_reverse_iterator rend () const noexcept { return const_reverse_iterator(_ptr); } //O(1)
+	const_reverse_iterator crbegin () const noexcept { return const_reverse_iterator(_ptr + _siz); } //O(1)
+	const_reverse_iterator crend () const noexcept { return const_reverse_iterator(_ptr); } //O(1)
 
 	size_t size () const noexcept //O(1)
 	{
@@ -320,14 +311,26 @@ public:
 	{
 		if (n > _cap)
 		{
-			T* data = _dAlloc.allocate(n);
-			for (size_t i = 0; i < _siz; i++)
+			if (_ptr != nullptr)
 			{
-				data[i] = _ptr[i];
+				T* data = _dAlloc.allocate(n); //Allokera
+				int index = 0;
+
+				while (index < _siz)
+				{
+					new(data + index) T(std::move(_ptr[index])); //Ändrad till move, kan inte ge exceptions
+					index++;
+				}
+
+				this->~Vector();
+				_ptr = data;
+
 			}
-			
-			_dAlloc.deallocate(_ptr, _cap);
-			_ptr = data;
+			else
+			{
+				_ptr = _dAlloc.allocate(n);
+				_siz = 0;
+			}
 			_cap = n;
 		}
 	}
@@ -337,22 +340,65 @@ public:
 		if (_cap > _siz)
 		{
 			T* data = _dAlloc.allocate(_siz);
-			for(size_t i = 0; i < _siz; i++)
+			int index = 0;
+			while (index < _siz)
 			{
-				data[i] = _ptr[i];
+				new(data + index) T(std::move(_ptr[index]));
+				_ptr[index].~T();
+				index++;
 			}
-
 			_dAlloc.deallocate(_ptr, _cap);
 			_ptr = data;
 			_cap = _siz;
 		}
 	}
 
-	void push_back (T c) //O(1) amorterat
+	void push_back (const T& c) //O(1) amorterat
 	{
-		//Kontrollera att _cap != 0
-		if (_siz == _cap) reserve(_cap * 2);
-		_ptr[_siz++] = c;
+		if (_siz == _cap)
+		{
+			if (_cap == 0)
+			{
+				reserve(8);
+			}
+			else
+			{
+				reserve(_cap * 2);
+			}
+		}
+		try
+		{
+			new(_ptr + _siz) T(c);
+			_siz++;
+		}
+		catch (const std::exception&)
+		{
+			throw;
+		}
+	}
+
+	void push_back(T&& c) //O(1) amorterat
+	{
+		if (_siz == _cap)
+		{
+			if (_cap == 0)
+			{
+				reserve(8);
+			}
+			else
+			{
+				reserve(_cap * 2);
+			}
+		}
+		try
+		{
+			new(_ptr + _siz) T(std::move(c));
+			_siz++;
+		}
+		catch (const std::exception&)
+		{
+			throw;
+		}
 	}
 
 	void resize (size_t n) //O(1) amoreterat
@@ -362,7 +408,7 @@ public:
 		{
 			for (size_t i = _siz; i < n; i++)
 			{
-				_ptr[i] = T();
+				new(_ptr + i) T();
 			}
 		}
 		_siz = n;
@@ -370,6 +416,8 @@ public:
 
 	friend bool operator== (const Vector& lhs, const Vector& rhs) //O(N)
 	{
+		if (lhs.size() != rhs.size)
+			return	false;
 		auto iterLeft = lhs.begin();
 		auto iterRght = rhs.begin();
 
@@ -403,7 +451,7 @@ public:
 
 	bool Invariant() const
 	{
-		return (_ptr != nullptr) && (_siz <= _cap);
+		return (_siz <= _cap);
 	}
 
 	friend std::ostream& operator<< (std::ostream& cout, const Vector& other)

@@ -191,7 +191,7 @@ void TestBasic() {
         FOX BAR;
         auto it=Fox.begin();
         auto it2 = it;
-        it2 += 2; 
+        it2 += 2;
         auto it3 = (it + 2);
         assert(it2 == it3);
         it2 = it2 - 2;

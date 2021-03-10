@@ -100,6 +100,7 @@ void TestIterPartC_() {
 void TestIterPartR_() {
     Vector<char> s1("foxbar");
     Vector<char> r1;
+    
     for (auto i = s1.rbegin(); i != s1.rend(); i++)
         r1.push_back(*i);
     assert(r1 == "rabxof");
@@ -314,7 +315,7 @@ void TestRevIterInAlg() {
     auto b = std::rbegin(v);
     auto e = std::rend(v);
 
-    random_shuffle(b, e);
+    //random_shuffle(b, e);
 
     cout << v << endl;
 
