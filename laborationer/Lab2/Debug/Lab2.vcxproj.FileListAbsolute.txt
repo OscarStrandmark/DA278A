@@ -1,2 +1,0 @@
-W:\git\DA278A\laborationer\Lab2\Debug\Lab2.exe
-W:\git\DA278A\laborationer\Lab2\Debug\Lab2.pdb
