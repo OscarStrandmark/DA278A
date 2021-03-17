@@ -54,15 +54,15 @@ public:
 
 	SharedPtr(std::nullptr_t nullp)
 	{
-		_ptr = nullptr;
-		_refCount = nullptr;
+		_ptr = nullp;
+		_refCount = nullp;
 	}
 
 	SharedPtr(T* other)
 	{
 		_ptr = other;
-		_refCount = nullptr;
-		_addReference(other);
+		_refCount = new int(1);
+		//_addReference(other);
 	}
 
 	SharedPtr(SharedPtr& other)
@@ -82,8 +82,9 @@ public:
 
 		_ptr = other._ptr;
 		_refCount = other._refCount;
-		_addReference(_ptr);
-		other._removeReference();
+
+		other._ptr = nullptr;
+		other._refCount = nullptr;
 	}
 
 	SharedPtr& operator=(SharedPtr& other)
@@ -107,8 +108,9 @@ public:
 		_removeReference();
 		_ptr = other._ptr;
 		_refCount = other._refCount;
-		_addReference(_ptr);
-		other._removeReference();
+
+		other._ptr = nullptr;
+		other._refCount = nullptr;
 
 		return *this;
 	}
@@ -153,12 +155,11 @@ public:
 		return *_refCount;
 	}
 
-
 	bool Invariant() const noexcept
 	{
 		if (_refCount == nullptr && _ptr == nullptr)
 			return true;
-		else if (_refCount != nullptr && _ptr != nullptr)
+		else if (_refCount != nullptr && _ptr != nullptr && *_refCount > 0)
 			return true;
 		return false;
 	}
